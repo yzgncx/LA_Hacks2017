@@ -1,2 +1,2 @@
 //content.js
-alert("Hello from your extension's javascript")
+//alert("Hello from your extension's javascript")
