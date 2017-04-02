@@ -3,6 +3,12 @@ var countdownTimer;
 var MAX_COOLDOWN = 15;							//cooldown time
 var MAX_COUNTER = 4;							//number of tweets per cooldown
 
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab){
+  if (changeInfo.status == 'complete' && localStorage.getItem("using") == "1") {
+	  createTweet(tab.url);
+  }
+  })
+
 function onPageLoad()
 {
 	if(localStorage.using != undefined)
@@ -272,36 +278,44 @@ function onPageLoad()
 		}
 }
 
-if(parseInt(localStorage.getItem("cooldown")) > MAX_COOLDOWN -1)
-{
-	localStorage.setItem("counter", 0);
-	localStorage.setItem("cooldown", 0);
-	clearInterval(countdownTimer);
-}
 
-var messWithPeeps = parseInt(localStorage.getItem("using"));		//see if we want to run the plugin
-if(parseInt(localStorage.getItem("counter")) < MAX_COUNTER )
+function createTweet(tabURL)
 {
-	if(messWithPeeps == 1)
+	var tweetText = "";
+	if(parseInt(localStorage.getItem("cooldown")) > MAX_COOLDOWN -1)
 	{
-		//alert("mess with peeps");
-		var storedNames = JSON.parse(localStorage.getItem("congressmen_handle"));
-		var findVictim = (Math.floor(Math.random()*storedNames.length))%storedNames.length
-		var temp = parseInt(localStorage.getItem("counter")) + 1;
-		localStorage.setItem("counter", temp);
-		if(temp >= MAX_COUNTER)
-		{
-			//alert("cooling down");
-			countdownTimer = setInterval(incrementCooldown, 1000);
-		}
-		
+		localStorage.setItem("counter", 0);
+		localStorage.setItem("cooldown", 0);
+		clearInterval(countdownTimer);
 	}
-}
-else
-{
-	//alert("cooling down");
-	clearInterval(countdownTimer);
-	countdownTimer = setInterval(incrementCooldown, 1000);
+
+	var messWithPeeps = parseInt(localStorage.getItem("using"));		//see if we want to run the plugin
+	if(parseInt(localStorage.getItem("counter")) < MAX_COUNTER )
+	{
+		if(messWithPeeps == 1)
+		{
+			//alert("mess with peeps");
+			var storedNames = JSON.parse(localStorage.getItem("congressmen_handle"));
+			var findVictim = (Math.floor(Math.random()*storedNames.length))%storedNames.length
+			var temp = parseInt(localStorage.getItem("counter")) + 1;
+			tweetText = storedNames[findVictim] + " just in case you were wonderin', I'm on " + tabURL + " #SJR34";
+			alert(tweetText);
+			localStorage.setItem("counter", temp);
+			if(temp >= MAX_COUNTER)
+			{
+				//alert("cooling down");
+				countdownTimer = setInterval(incrementCooldown, 1000);
+			}
+			
+		}
+	}
+	else
+	{
+		//alert("cooling down");
+		clearInterval(countdownTimer);
+		countdownTimer = setInterval(incrementCooldown, 1000);
+	}
+
 }
 
 function incrementCooldown()
