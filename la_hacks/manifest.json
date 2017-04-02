@@ -1,16 +1,12 @@
 {
   "manifest_version": 2,
 
-  "name": "Turning Congress Off Again",
-  "description": "Sends your URL to a random Congressperson via Twitter since they signed a bill or whatever for it anyway :)",
+  "name": "Turning Congress Off and On Again",
+  "description": "Recently, Congress passed a bill that basically allows the purchase and distribution of metadata. So this is us giving it to them. For every URL you visit, you can choose to send that URL to a random Senator or Congressperson who voted Yes on the bill through Twitter. To use, click on the switch in the drop-down menu to toggle between on and off. When toggled on, click on the extension icon to tweet a random politician about your current webpage. The window lasts 5 seconds before closing automatically. There is a cooldown period for every few tweets but that's only there so you don't exceed Twitter's limit and get banned. Ahh, what would those politicans do without good citizens like ourselves?",
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": {                    // optional
-            "16": "images/icon16.png",           // optional
-            "24": "images/icon24.png",           // optional
-            "32": "images/icon32.png"            // optional
-          },
+    "default_icon": "pepe.png",
     "default_popup": "popup.html"
   },
 
