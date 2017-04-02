@@ -1,20 +1,12 @@
-//merge it bro
+window.onload = onPageLoad();
+var countdownTimer;
 var MAX_COOLDOWN = 15;							//cooldown time
 var MAX_COUNTER = 4;							//number of tweets per cooldown
-window.onload = onPageLoad();
-var foregroundTimer;
 
-function onPageLoad() {
+function onPageLoad()
+{
 	if(localStorage.using != undefined)
 	{
-		if(parseInt(localStorage.getItem("using")) == 1)
-		{
-			document.getElementById("power").checked = true;
-		}
-		else
-		{
-			document.getElementById("power").checked = false;
-		}
 	}
 		if(localStorage.congressmen_handle == undefined)
 		{
@@ -278,63 +270,50 @@ function onPageLoad() {
 		{
 			localStorage.setItem("counter", 0);
 		}
-		if(parseInt(localStorage.getItem("cooldown")) > MAX_COOLDOWN - 1)
-		{
-			clearInterval(foregroundTimer);
-			document.getElementById("counter_loc").innerHTML = localStorage.getItem("counter");
-			document.getElementById("timer_loc").innerHTML = "0";
-		
-		}
-		else
-		{
-			document.getElementById("counter_loc").innerHTML = "0";
-			var ap = MAX_COOLDOWN - parseInt(localStorage.getItem("cooldown"));
-			document.getElementById("timer_loc").innerHTML = ap.toString();
-		}
 }
 
-//always runs the code below because not in a function
-var holder = parseInt(localStorage.getItem("counter"));
-if(holder >= MAX_COUNTER)
+if(parseInt(localStorage.getItem("cooldown")) > MAX_COOLDOWN -1)
+{
+	localStorage.setItem("counter", 0);
+	localStorage.setItem("cooldown", 0);
+	clearInterval(countdownTimer);
+}
+
+var messWithPeeps = parseInt(localStorage.getItem("using"));		//see if we want to run the plugin
+if(parseInt(localStorage.getItem("counter")) < MAX_COUNTER )
+{
+	if(messWithPeeps == 1)
+	{
+		//alert("mess with peeps");
+		var storedNames = JSON.parse(localStorage.getItem("congressmen_handle"));
+		var findVictim = (Math.floor(Math.random()*storedNames.length))%storedNames.length
+		var temp = parseInt(localStorage.getItem("counter")) + 1;
+		localStorage.setItem("counter", temp);
+		if(temp >= MAX_COUNTER)
+		{
+			//alert("cooling down");
+			countdownTimer = setInterval(incrementCooldown, 1000);
+		}
+		
+	}
+}
+else
 {
 	//alert("cooling down");
-	foregroundTimer = setInterval(updateDisplay, 1000);
-}
-else{
-		document.getElementById("counter_loc").innerHTML = MAX_COUNTER - localStorage.getItem("counter");
-		document.getElementById("timer_loc").innerHTML = "0";
+	clearInterval(countdownTimer);
+	countdownTimer = setInterval(incrementCooldown, 1000);
 }
 
-
-
-function updateDisplay()
+function incrementCooldown()
 {
+	var temp = parseInt(localStorage.getItem("cooldown")) + 1;
+	localStorage.setItem("cooldown", temp);
 	if(parseInt(localStorage.getItem("cooldown")) > MAX_COOLDOWN - 1)
 	{
-		clearInterval(foregroundTimer);
-		document.getElementById("counter_loc").innerHTML = localStorage.getItem("counter");
-		document.getElementById("timer_loc").innerHTML = "0";
+		localStorage.setItem("counter", 0);
+		localStorage.setItem("cooldown", 0);
+		clearInterval(countdownTimer);
+		clearInterval(countdownTimer);
 	
 	}
-	else
-	{
-		document.getElementById("counter_loc").innerHTML = "0";
-		var ap = MAX_COOLDOWN - parseInt(localStorage.getItem("cooldown"));
-		document.getElementById("timer_loc").innerHTML = ap.toString();
-	}
 }
-
-function messWithCongress()											//function called when the button is pressed
-{
-	var check = document.getElementById("power").checked;			//check if the button is on or off and update the local storage
-	if(check == false)
-	{
-		localStorage.setItem("using", 0);
-	}
-	else
-	{
-		localStorage.setItem("using", 1);
-	}
-}
-
-document.getElementById("power").onclick =messWithCongress;
