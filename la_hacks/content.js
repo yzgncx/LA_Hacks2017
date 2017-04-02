@@ -9,7 +9,7 @@ function onPageLoad() {
 	{
 		if(localStorage.using == undefined)		//if the local storage for the plugin being on hasn't been initialized
 		{
-			localStorage.setItem("using", 0);	//initialize the "using" local variable
+			localStorage.setItem("using", 1);	//initialize the "using" local variable
 		}
 		if(localStorage.congressmen_handle == undefined)
 		{
@@ -364,3 +364,4 @@ function messWithCongress()											//function called when the button is press
 		localStorage.setItem("using", 1);
 	}
 }
+document.getElementById("power").onclick = localStorage.getItem("using");
