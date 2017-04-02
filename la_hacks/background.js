@@ -1,7 +1,7 @@
 window.onload = onPageLoad();
 var countdownTimer;
-var MAX_COOLDOWN = 15;							//cooldown time
-var MAX_COUNTER = 4;							//number of tweets per cooldown
+var MAX_COOLDOWN = 900;							//cooldown time
+var MAX_COUNTER = 15;							//number of tweets per cooldown
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab){
   if (changeInfo.status == 'complete' && localStorage.getItem("using") == "1") {
@@ -11,9 +11,9 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab){
 
 function onPageLoad()
 {
-	if(localStorage.using != undefined)
-	{
-	}
+		if(localStorage.using != undefined)
+		{
+		}
 		if(localStorage.congressmen_handle == undefined)
 		{
 			var names = ["@lutherstrange",
@@ -264,7 +264,7 @@ function onPageLoad()
 "@RepEvanJenkins",
 "@RepMcKinley",
 "@RepAlexMooney",
-"@Rep_LizCheney"]
+"@Rep_LizCheney"];
 
 			localStorage.setItem("congressmen_handle", JSON.stringify(names) );
 		}
@@ -275,6 +275,11 @@ function onPageLoad()
 		if(localStorage.counter == undefined)
 		{
 			localStorage.setItem("counter", 0);
+		}
+		if(localStorage.tweetQueue == undefined)
+		{
+			var arr = ["harder than it seemed"]
+			localStorage.setItem("tweetQueue", JSON.stringify(arr));
 		}
 }
 
@@ -294,24 +299,35 @@ function createTweet(tabURL)
 	{
 		if(messWithPeeps == 1)
 		{
-			//alert("mess with peeps");
 			var storedNames = JSON.parse(localStorage.getItem("congressmen_handle"));
-			var findVictim = (Math.floor(Math.random()*storedNames.length))%storedNames.length
+			var length = storedNames.length;
+			var findVictim = (Math.floor(Math.random()*length)%length);
 			var temp = parseInt(localStorage.getItem("counter")) + 1;
 			tweetText = storedNames[findVictim] + " just in case you were wonderin', I'm on " + tabURL + " #SJR34";
-			alert(tweetText);
-			localStorage.setItem("counter", temp);
-			if(temp >= MAX_COUNTER)
+			if(tweetText.length < 140 && JSON.parse(localStorage.getItem("tweetQueue")).length < 100)
 			{
-				//alert("cooling down");
-				countdownTimer = setInterval(incrementCooldown, 1000);
+				if(JSON.parse(localStorage.getItem("tweetQueue")).length != 0)
+				{
+					var tweetArr = JSON.parse(localStorage.getItem("tweetQueue"));
+					tweetArr.push(tweetText);
+					localStorage.setItem("tweetQueue",JSON.stringify(tweetArr));
+				}
+				else
+				{
+					var arr = [tweetText];
+					localStorage.setItem("tweetQueue",JSON.stringify(arr));
+				}
+				localStorage.setItem("counter", temp);
+				if(temp >= MAX_COUNTER)
+				{
+					countdownTimer = setInterval(incrementCooldown, 1000);
+				}
 			}
 			
 		}
 	}
 	else
 	{
-		//alert("cooling down");
 		clearInterval(countdownTimer);
 		countdownTimer = setInterval(incrementCooldown, 1000);
 	}

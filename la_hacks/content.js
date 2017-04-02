@@ -1,6 +1,6 @@
 //merge it bro
-var MAX_COOLDOWN = 15;							//cooldown time
-var MAX_COUNTER = 4;							//number of tweets per cooldown
+var MAX_COOLDOWN = 900;							//cooldown time
+var MAX_COUNTER = 15;							//number of tweets per cooldown
 window.onload = onPageLoad();
 var foregroundTimer;
 
@@ -291,13 +291,33 @@ function onPageLoad() {
 			var ap = MAX_COOLDOWN - parseInt(localStorage.getItem("cooldown"));
 			document.getElementById("timer_loc").innerHTML = ap.toString();
 		}
+		if(localStorage.tweetQueue == undefined)
+		{
+			var arr = ["harder than it seemed"]
+			localStorage.setItem("tweetQueue", JSON.stringify(arr));
+		}
+		
+		if(localStorage.getItem("tweetQueue") != "")
+		{
+			var tweetArr = JSON.parse(localStorage.getItem("tweetQueue"));
+			var holder;
+			if(tweetArr.length > 1)
+			{
+				var twit="https://twitter.com/intent/tweet";
+				holder = tweetArr.pop();
+				var openedWindow = window.open(twit+"?text="+holder,"", "width=500px, height=300px");
+				openedWindow.focus();
+				setTimeout(function(){
+				holder = "";openedWindow.close()}, 5000);
+				localStorage.setItem("tweetQueue",JSON.stringify(tweetArr));
+			}
+		}
 }
 
 //always runs the code below because not in a function
 var holder = parseInt(localStorage.getItem("counter"));
 if(holder >= MAX_COUNTER)
 {
-	//alert("cooling down");
 	foregroundTimer = setInterval(updateDisplay, 1000);
 }
 else{
