@@ -1,3 +1,4 @@
+//merge it bro
 window.onload = onPageLoad();
 var countdownTimer;
 var MAX_COOLDOWN = 15;							//cooldown time
