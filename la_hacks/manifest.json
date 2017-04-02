@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension shows a Google Image search result for the current page",
+  "name": "Turning Congress Off Again",
+  "description": "Sends your URL to a random Congressperson via Twitter since they signed a bill or whatever for it anyway :)",
   "version": "1.0",
 
   "browser_action": {
